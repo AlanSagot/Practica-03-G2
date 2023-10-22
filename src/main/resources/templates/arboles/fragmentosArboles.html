@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>ÁRBOLES</title>
+    </head>
+    <body>
+        <!-- Este es el boton para agregar un arbol -->
+        <section th:fragment="botonesAgregar" class="py-4 mb-4 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">   
+                        <button 
+                            type="button" 
+                            class="btn btn-success btn-block" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#agregarArbol">
+                            <i class="fas fa-plus"></i> [[#{arbol.agregar}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+         <!-- Lista, mostrar los datos de la base de datos --> 
+        <section th:fragment="listadoArboles" id="arboles">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="card text-center bg-dark text-white">
+                            <div class="card-body">
+                                <h3 style="font-size: 16px;">[[#{arbol.total}]]</h3> <!-- Ajusta el tamaño de fuente aquí -->
+                                <p style="font-size: 24px;"> <!-- Ajusta el tamaño de fuente aquí -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-tree" viewBox="0 0 16 16">
+                                        <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777l-3-4.5zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507z"/>
+                                    </svg>
+                                    [[${totalArboles}]]
+                                </p>
+                            </div>
+                        </div>
+                        <p></p>
+                        <div class="card text-center bg-dark text-white">
+                            <div class="card-body">
+                                <h3 style="font-size: 16px;">[[#{arbol.totalActivos}]]</h3> <!-- Ajusta el tamaño de fuente aquí -->
+                                <p style="font-size: 24px;"> <!-- Ajusta el tamaño de fuente aquí -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-tree" viewBox="0 0 16 16">
+                                        <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777l-3-4.5zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507z"/>
+                                    </svg>
+                                    [[${totalArbolesInactivos}]]
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>[[#{arbol.listado}]]</h4>
+                            </div>
+                            <div th:if="${arboles != null and !arboles.empty}">
+                                <table class="table table-ligth table-borderless">
+                                    <thead class="table-dark">
+                                        <tr><th>#</th>
+                                            <th>[[#{arbol.nombreComun}]]</th>
+                                            <th>[[#{arbol.tipoFlor}]]</th>
+                                            <th>[[#{arbol.dureza}]]</th>
+                                            <th>[[#{arbol.activo}]]</th>
+                                            <th></th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="arbol, contador : ${arboles}">
+                                            <td>[[${contador.count}]]</td>
+                                            <td>[[${arbol.nombreComun}]]</td>
+                                            <td>[[${arbol.tipoFlor}]]</td>
+                                            <td>[[${arbol.dureza}]]</td>
+                                            <td th:text="${arbol.activo} ? 'Activo' : 'Inactivo'" />
+                                            <td>
+                                                <a th:href="@{/arbol/eliminar/}+${arbol.idArbol}" class="btn btn-outline-danger">
+                                                    <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                                                </a>
+                                                <a th:href="@{/arbol/modificar/}+${arbol.idArbol}" class="btn btn-outline-success">
+                                                    <i class="fas fa-pencil"></i> [[#{accion.actualizar}]]
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center p-2" th:if="${arboles == null or arboles.empty}">
+                                <span>[[#{lista.vacia}]]</span>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+            
+
+        </section>
+    </body>
+</html>

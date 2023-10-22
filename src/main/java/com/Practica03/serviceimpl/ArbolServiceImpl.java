@@ -25,6 +25,15 @@ public class ArbolServiceImpl implements ArbolService {
 
         return arboles;
     }
+    
+    @Override
+    public List<Arbol> getArbolesInactivos(boolean inactivos) {
+        List<Arbol> arboles = arbolDao.findAll();
+        if (inactivos) {
+            arboles.removeIf(c -> c.isActivo());
+        }
+        return arboles;
+    }
 
     @Override
     public Arbol getArbol(Arbol arbol) {
