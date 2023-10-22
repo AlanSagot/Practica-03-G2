@@ -52,8 +52,5 @@ public class ArbolServiceImpl implements ArbolService {
         arbolDao.delete(arbol);
     }
 
-    
-
-    
 
 }
